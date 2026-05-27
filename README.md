@@ -34,7 +34,7 @@
 | 🛡️ **Admin Panel** | JWT-authenticated dashboard to view all audits, leads, and analytics |
 | 🔗 **Shareable Reports** | Public share URLs with PII scrubbing for safe social sharing |
 | 🐦 **Twitter/X Sharing** | One-click share to X with pre-filled savings stats |
-| 💾 **Persistent Storage** | File-backed fallback store when MongoDB is unavailable — data survives restarts |
+
 
 ---
 
