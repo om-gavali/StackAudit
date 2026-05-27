@@ -2,6 +2,10 @@
  * API Service Layer - StackAudit
  */
 
+// In production (Vercel), set VITE_API_URL to your deployed backend URL.
+// In development, leave it unset — Vite's proxy handles /api -> localhost:5000.
+const BASE_URL = import.meta.env.VITE_API_URL || '';
+
 const getAuthHeaders = () => {
   const token = localStorage.getItem('adminToken');
   return token ? { 'Authorization': `Bearer ${token}` } : {};
@@ -10,7 +14,7 @@ const getAuthHeaders = () => {
 export const api = {
   // Audit Engine endpoints
   createAudit: async (formData) => {
-    const response = await fetch('/api/audit', {
+    const response = await fetch(`${BASE_URL}/api/audit`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
@@ -21,7 +25,7 @@ export const api = {
   },
 
   getReport: async (id) => {
-    const response = await fetch(`/api/report/${id}`, {
+    const response = await fetch(`${BASE_URL}/api/report/${id}`, {
       headers: {
         ...getAuthHeaders()
       }
@@ -32,7 +36,7 @@ export const api = {
   },
 
   submitLead: async (id, leadData) => {
-    const response = await fetch(`/api/report/${id}/lead`, {
+    const response = await fetch(`${BASE_URL}/api/report/${id}/lead`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(leadData)
@@ -44,7 +48,7 @@ export const api = {
 
   // Auth endpoints
   adminLogin: async (username, password) => {
-    const response = await fetch('/api/admin/login', {
+    const response = await fetch(`${BASE_URL}/api/admin/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
@@ -56,7 +60,7 @@ export const api = {
 
   // Admin Dashboard endpoints
   getStats: async () => {
-    const response = await fetch('/api/admin/stats', {
+    const response = await fetch(`${BASE_URL}/api/admin/stats`, {
       headers: {
         ...getAuthHeaders()
       }
@@ -67,7 +71,7 @@ export const api = {
   },
 
   getReports: async () => {
-    const response = await fetch('/api/admin/reports', {
+    const response = await fetch(`${BASE_URL}/api/admin/reports`, {
       headers: {
         ...getAuthHeaders()
       }
@@ -78,7 +82,7 @@ export const api = {
   },
 
   getLeads: async () => {
-    const response = await fetch('/api/admin/leads', {
+    const response = await fetch(`${BASE_URL}/api/admin/leads`, {
       headers: {
         ...getAuthHeaders()
       }
@@ -89,7 +93,7 @@ export const api = {
   },
 
   deleteReport: async (id) => {
-    const response = await fetch(`/api/admin/reports/${id}`, {
+    const response = await fetch(`${BASE_URL}/api/admin/reports/${id}`, {
       method: 'DELETE',
       headers: {
         ...getAuthHeaders()

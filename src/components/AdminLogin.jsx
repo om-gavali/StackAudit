@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User, Loader2 } from 'lucide-react';
+import { api } from '../services/api';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
@@ -15,20 +16,11 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-      const data = await res.json();
-      if (data.success) {
-        localStorage.setItem('adminToken', data.token);
-        navigate('/admin/dashboard');
-      } else {
-        setError(data.error || 'Invalid credentials');
-      }
+      const data = await api.adminLogin(username, password);
+      localStorage.setItem('adminToken', data.token);
+      navigate('/admin/dashboard');
     } catch (err) {
-      setError('Network error. Is the server running?');
+      setError(err.message || 'Network error. Is the server running?');
     }
     setLoading(false);
   };

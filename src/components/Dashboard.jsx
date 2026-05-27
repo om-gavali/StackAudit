@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from 'recharts';
 import { Download, Share2, ArrowLeft, CheckCircle2, TrendingDown, Info, Mail, Building, Briefcase, Users, Loader2, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { api } from '../services/api';
 
 const COLORS = ['#8b5cf6', '#ec4899', '#3b82f6', '#10b981', '#f59e0b', '#6366f1'];
 
@@ -31,41 +32,30 @@ export default function Dashboard({ isPublic = false }) {
   };
 
   useEffect(() => {
-    const fetchHeaders = {};
-    const token = localStorage.getItem('adminToken');
-    if (token) {
-      fetchHeaders['Authorization'] = `Bearer ${token}`;
-    }
-
-    fetch(`/api/report/${id}`, { headers: fetchHeaders })
-      .then(res => res.json())
+    api.getReport(id)
       .then(data => {
-        if (data.error) {
-          setError(data.error);
-        } else {
-          setReport(data);
-          // If it is public, we automatically bypass the gated modal blur
-          setLeadCapturedState(isPublic ? true : data.leadCaptured);
-          setTeamSize(data.companyDetails?.teamSize || 1);
-          
-          // Set OG / Twitter Meta Tags
-          const metaTitle = `AI Spend Audit - Potential Savings: $${data.monthlySavings}/mo`;
-          const metaDesc = `Optimized stack reduces monthly AI tool spending from $${data.totalCurrentMonthlySpend} to $${data.totalOptimizedMonthlySpend}. Audit your stack instantly.`;
-          
-          document.title = metaTitle;
-          updateOrCreateMeta('description', metaDesc);
-          updateOrCreateMeta('og:title', metaTitle, 'property');
-          updateOrCreateMeta('og:description', metaDesc, 'property');
-          updateOrCreateMeta('og:type', 'website', 'property');
-          updateOrCreateMeta('og:url', window.location.href, 'property');
-          updateOrCreateMeta('twitter:card', 'summary_large_image');
-          updateOrCreateMeta('twitter:title', metaTitle);
-          updateOrCreateMeta('twitter:description', metaDesc);
-        }
+        setReport(data);
+        // If it is public, we automatically bypass the gated modal blur
+        setLeadCapturedState(isPublic ? true : data.leadCaptured);
+        setTeamSize(data.companyDetails?.teamSize || 1);
+        
+        // Set OG / Twitter Meta Tags
+        const metaTitle = `AI Spend Audit - Potential Savings: $${data.monthlySavings}/mo`;
+        const metaDesc = `Optimized stack reduces monthly AI tool spending from $${data.totalCurrentMonthlySpend} to $${data.totalOptimizedMonthlySpend}. Audit your stack instantly.`;
+        
+        document.title = metaTitle;
+        updateOrCreateMeta('description', metaDesc);
+        updateOrCreateMeta('og:title', metaTitle, 'property');
+        updateOrCreateMeta('og:description', metaDesc, 'property');
+        updateOrCreateMeta('og:type', 'website', 'property');
+        updateOrCreateMeta('og:url', window.location.href, 'property');
+        updateOrCreateMeta('twitter:card', 'summary_large_image');
+        updateOrCreateMeta('twitter:title', metaTitle);
+        updateOrCreateMeta('twitter:description', metaDesc);
         setLoading(false);
       })
       .catch(err => {
-        setError('Failed to load report.');
+        setError(err.message || 'Failed to load report.');
         setLoading(false);
       });
   }, [id, isPublic]);
@@ -76,42 +66,32 @@ export default function Dashboard({ isPublic = false }) {
     setSubmitLoading(true);
 
     try {
-      const res = await fetch(`/api/report/${id}/lead`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, companyName, role, teamSize })
-      });
-      const data = await res.json();
-      if (data.success) {
-        setLeadCapturedState(true);
-        if (data.previewUrl) {
-          toast.success(
-            (t) => (
-              <span className="flex items-center gap-1">
-                Report unlocked! 📬 Test email sent.
-                <a 
-                  href={data.previewUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="underline text-purple-400 font-bold ml-1 hover:text-purple-300 hover:scale-102 transition-transform"
-                  onClick={() => toast.dismiss(t.id)}
-                >
-                  View test email
-                </a>
-              </span>
-            ),
-            { duration: 10000 }
-          );
-        } else {
-          toast.success('Report unlocked! A confirmation has been sent to your email.');
-        }
+      const data = await api.submitLead(id, { email, companyName, role, teamSize });
+      setLeadCapturedState(true);
+      if (data.previewUrl) {
+        toast.success(
+          (t) => (
+            <span className="flex items-center gap-1">
+              Report unlocked! 📬 Test email sent.
+              <a 
+                href={data.previewUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="underline text-purple-400 font-bold ml-1 hover:text-purple-300 hover:scale-102 transition-transform"
+                onClick={() => toast.dismiss(t.id)}
+              >
+                View test email
+              </a>
+            </span>
+          ),
+          { duration: 10000 }
+        );
       } else {
-        setSubmitError(data.error || 'Failed to submit details');
-        toast.error(data.error || 'Submission failed');
+        toast.success('Report unlocked! A confirmation has been sent to your email.');
       }
     } catch (err) {
-      setSubmitError('Network error. Is the server running?');
-      toast.error('Network connection error.');
+      setSubmitError(err.message || 'Network error. Is the server running?');
+      toast.error('Submission failed.');
     }
     setSubmitLoading(false);
   };

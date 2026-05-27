@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, ArrowRight, ArrowLeft, Loader2, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { api } from '../services/api';
 
 const AVAILABLE_TOOLS = [
   'Cursor', 'GitHub Copilot', 'ChatGPT', 'Claude', 'Gemini', 'OpenAI API', 'Anthropic API', 'Windsurf'
@@ -91,21 +92,11 @@ export default function MultiStepForm() {
     const auditToast = toast.loading('Calculating savings and compiling recommendations...');
     
     try {
-      const res = await fetch('/api/audit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      const data = await res.json();
-      
-      if (data.success) {
-        toast.success('Audit completed! Redirecting to report...', { id: auditToast });
-        navigate(`/dashboard/${data.id}`);
-      } else {
-        toast.error(data.error || 'Failed to generate report.', { id: auditToast });
-      }
+      const data = await api.createAudit(formData);
+      toast.success('Audit completed! Redirecting to report...', { id: auditToast });
+      navigate(`/dashboard/${data.id}`);
     } catch (err) {
-      toast.error('Network error. Is the backend server running?', { id: auditToast });
+      toast.error(err.message || 'Network error. Is the backend server running?', { id: auditToast });
     }
     setLoading(false);
   };
