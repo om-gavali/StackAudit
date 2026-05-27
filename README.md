@@ -17,7 +17,6 @@
   <img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white" />
   <img alt="Gemini" src="https://img.shields.io/badge/Gemini_AI-3.5_Flash-4285F4?logo=google&logoColor=white" />
   <img alt="TailwindCSS" src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white" />
-  <img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
 </p>
 
 ---
@@ -305,21 +304,6 @@ Access the admin dashboard at `/admin/login` with your configured credentials.
 |---------|-------------|
 | `node server.js` | Start Express server |
 
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
 
 ---
 
