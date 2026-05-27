@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .glass {
+    @apply bg-white/10 backdrop-blur-lg border border-white/20 shadow-[0_8px_32px_0_rgba(31,38,135,0.37)];
+  }
+  .glass-dark {
+    @apply bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl;
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-500 to-red-500;
+  }
+}
+
+body {
+  @apply bg-slate-950 text-slate-50 antialiased selection:bg-purple-500/30;
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.4);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(147, 51, 234, 0.3);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(147, 51, 234, 0.6);
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm 10mm 15mm 10mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #1e293b !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  header, footer, .print\:hidden, button, a[href^="/admin"], svg.w-4.h-4.fill-current {
+    display: none !important;
+  }
+  
+  /* Make card containers clean and elegant with subtle borders */
+  .glass, .glass-dark {
+    background: #f8fafc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    color: #1e293b !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    border-radius: 12px !important;
+    margin-bottom: 12px !important;
+    padding: 16px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Headings styling */
+  h1, h2, h3, h4, h5, h6, span, p, div {
+    color: #0f172a !important;
+    text-shadow: none !important;
+  }
+
+  h1 {
+    font-size: 24pt !important;
+    margin-bottom: 8px !important;
+    font-weight: 800 !important;
+  }
+
+  h2 {
+    font-size: 15pt !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+    padding-bottom: 4px !important;
+    margin-top: 16px !important;
+    margin-bottom: 12px !important;
+    font-weight: 700 !important;
+  }
+
+  h3 {
+    font-size: 11pt !important;
+    font-weight: 700 !important;
+  }
+
+  /* Specific styling for the executive summary block */
+  .bg-gradient-to-r.from-purple-950\/20.to-pink-950\/20 {
+    background: #f5f3ff !important;
+    border: 2px solid #c084fc !important;
+    border-radius: 16px !important;
+    padding: 20px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* KPI cards layout in a neat row for print */
+  .grid.md\:grid-cols-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Charts and Action plan grid */
+  .grid.lg\:grid-cols-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 20px !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Optimized stack layout */
+  .grid.sm\:grid-cols-2.md\:grid-cols-4 {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  .grid.sm\:grid-cols-2.md\:grid-cols-4 > div {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    padding: 10px !important;
+  }
+
+  .grid.sm\:grid-cols-2.md\:grid-cols-4 > .sm\:col-span-2,
+  .grid.sm\:grid-cols-2.md\:grid-cols-4 > .md\:col-span-full {
+    grid-column: span 4 / span 4 !important;
+    background: #faf5ff !important;
+    border: 1.5px solid #c084fc !important;
+  }
+
+  .text-gradient {
+    color: #6d28d9 !important;
+    background: none !important;
+    -webkit-text-fill-color: initial !important;
+  }
+
+  .text-green-400, .text-emerald-500 {
+    color: #166534 !important; /* Dark green for high visibility */
+    font-weight: 700 !important;
+  }
+
+  .bg-green-400\/10 {
+    background-color: #f0fdf4 !important;
+    border: 1px solid #bbf7d0 !important;
+    color: #166534 !important;
+  }
+
+  .bg-slate-950\/50, .bg-slate-950\/60 {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  .container {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Prevent page breaks inside cards and sections */
+  section, .glass, .glass-dark, table, tr, pre {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}
+
